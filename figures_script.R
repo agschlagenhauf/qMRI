@@ -7,10 +7,19 @@ library(readxl)
 library(tidyverse)
 library(meta)
 library(metafor)
+library(readr)
 
 # load data
-file <- "/cloud/project/data/Literatur_uebersicht.csv"
-data_qmri <- read.csv(file, header = TRUE, sep = ",", quote = "\"", dec = ",", fill = TRUE,na.strings = "NA")
+#file <- "/cloud/project/data/Literatur_uebersicht.csv"
+#data_qmri <- read.csv(file, header = TRUE, sep = ",", quote = "\"", dec = ";", fill = TRUE,na.strings = "NA")
+
+data_qmri <- read_delim("data/Literatur_uebersicht.csv", 
+                        ";", escape_double = FALSE, trim_ws = TRUE)
+
+# still displays decimals and turn relevant columns into 
+data_qmri_cr <- data_qmri%>%filter(Autor!="Yamashita")
+
+options(digits=5)
 data_qmri[,17:29] <- sapply(data_qmri[,17:29],as.numeric)
 
 ################################################################################################################
@@ -40,14 +49,14 @@ calc_sd_sample<-function(n1,n2,m1,m2,sd1,sd2){sd_whole_group<-sqrt(((n1-1)*sd1^2
 # for ROI (SN)
 resul<-data_qmri%>%
   metacont(SZn, SZmean, SZsd, HCn, HCmean, HCsd, Autor, data = ., sm="SMD", method.smd = "Cohen")
-forest(resul, lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
+forest_SN <- forest(resul, lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
 
 data_qmri$SZmean_LC<-as.numeric(data_qmri$SZmean_LC)
 
 ##for control region LC
 resul<-data_qmri%>%
   metacont(SZn, SZmean_LC, SZsd_LC, HCn, HCmean_LC, HCsd_LC, Autor, data = ., sm="SMD", method.smd = "Cohen")
-forest(resul, lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
+forest_LC<- forest(resul, lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
 
 #for info on I squared
 #https://wiki.joannabriggs.org/display/MANUAL/3.3.10.2+Quantification+of+the+statistical+heterogeneity%3A+I+squared
@@ -57,19 +66,22 @@ forest(resul, lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
 pdf("/cloud/project/figures/Fig1_forest_subgroup_med_02_02_2021_lab.pdf", width=12, height=12) 
 
 #create plot
-# forest(resul_by_subgroup, col.square = "lightblue", col.diamond = "darkblue", col.diamond.lines = "darkblue", lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
+forest(resul_by_subgroup, col.square = "lightblue", col.diamond = "darkblue", col.diamond.lines = "darkblue", lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
 # Close the pdf file
 dev.off() 
 
 #reload data for correct ordering
-data_qmri <- read.csv(file, header = TRUE, sep = ",", quote = "\"", dec = ",", fill = TRUE,na.strings = "NA")
+#data_qmri <- read.csv(file, header = TRUE, sep = ",", quote = "\"", dec = ",", fill = TRUE,na.strings = "NA")
+
+data_qmri<- read_delim("data/Literatur_uebersicht.csv", 
+           ";", escape_double = FALSE, trim_ws = TRUE)
 data_qmri[,17:29] <- sapply(data_qmri[,17:29],as.numeric)
 data_qmri <- data_qmri %>% rowwise() %>% mutate(age_mean=mean(c(age_HC, age_SZ), na.rm=T))
 
 ## FOR THE FOLLOWING insert correct references in Literature Table
 #for table get Referennce no.
-# data_qmri$Reference<-paste0(data_qmri$a, data_qmri$Reference, data_qmri$b)
-# data_qmri$studylab<-paste(data_qmri$studylab, data_qmri$Reference)
+ data_qmri$Reference<-paste0(data_qmri$a, data_qmri$Reference, data_qmri$b)
+ data_qmri$studylab<-paste(data_qmri$Autor, data_qmri$Reference)
 
 #calculate Coefficient of Variance Ratio
 cvar_ratio<-data_qmri%>%
@@ -89,8 +101,8 @@ summary(resul_cvar_ratio)
 pdf("/cloud/project/figures/Fig2_forestCVR_subgroup_med02_02_2021_lab.pdf", width=10, height=6) 
 # 2. Create a plot
 
-forest_plot<-forest.rma(resul_cvar_ratio, xlim=c(-8, 6),ylim=c(-1, 29),
-                        order=order(data_qmri$medication_status, decreasing = T), cex=0.9,rows=c(1,19:17,25:24,12:6), psize=0,top=2, addfit = T, col = "darkblue", xlab = "")
+#forest_plot<-forest.rma(resul_cvar_ratio, xlim=c(-8, 6),ylim=c(-1, 29),
+#                        order=order(data_qmri$medication_status, decreasing = T), cex=0.9,rows=c(1,19:17,25:24,12:6), psize=0,top=2, addfit = T, col = "darkblue", xlab = "")
 #for getting rid of the black squares, psize=0 is added
 #now, add nice blue squares
 points(resul_cvar_ratio$yi[1:13][order(data_qmri$medication_status)],rev(c(1,17:19,24:25,6:12)), pch=15, col="lightblue")
@@ -323,7 +335,7 @@ dev.off()
 resul_var_ratio<-rma.uni(var_ratio, measure = "VR", slab=data_qmri$studylab, mods = ~ medication_status)
 resul_var_ratio<-rma.uni(var_ratio, measure = "VR", slab=data_qmri$studylab)
 
-pdf(/cloud/project/figures/SFig11rplot_forestVR_subgroup_02_02_21_.pdf", width=10, height=6) 
+pdf("/cloud/project/figures/SFig11rplot_forestVR_subgroup_02_02_21_.pdf", width=10, height=6) 
 # 2. Create a plot
 forest_plot<-forest.rma(resul_var_ratio, xlim=c(-8, 6),ylim=c(-1, 29),
                         order=order(data_qmri$medication_status, decreasing = T), cex=1,rows=c(1,19:17,25:24,12:6), psize=1,top=2, addfit = T)
