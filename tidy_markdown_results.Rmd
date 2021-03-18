@@ -1,14 +1,15 @@
 ---
 title: "Neuromelanin-sensitive MRI sequences in schizophrenia"
-author: "Lara Wieland, Sophie Fromm, Jakob Kaminski & Florian Schlagenhauf"
-date: "10 2 2021"
+author: "Lara Wieland, Sophie Fromm, Jakob Kaminski, Stefan Hetzer, & Florian Schlagenhauf"
+date: "16 3 2021"
 output: html_document
 fig_crop: FALSE
 bibliography: qMRI.bib
 
 ---
 
-### Background
+
+
 
 ```{r packages, include=FALSE}
 rm(list = ls()) 
@@ -83,6 +84,34 @@ data_qmri_cr <- data_qmri_cr %>% rowwise() %>% mutate(age_mean=mean(c(age_HC, ag
 
 ```
 
+### Abstract
+
+**Background**: Psychiatry is in urgent need for novel bio-markers. Novel neuromelanin-sensitive magnetic resonance imaging (NM-MRI) sequences provide a time-efficient and non-invasive way to investigate the human brain in-vivo. This allows researchers to gain insight into the metabolites of dopaminergic signaling and may provide further evidence for the hypothesized dopamine dysfunction in schizophrenia (SZ). The present review gives a narrative overview and quantitative synthesis of case-control studies using neuromelanine-sensitive sequences in SZ vs. healthy controls (HC).
+
+**Methods**: According to pregistration on January 5, 2021 (https://osf.io/fykum) the following search terms "neuromelanin" OR "qMRI" OR "hMRI" AND (MRI)) AND "schizophrenia" OR "schizophrenic" OR "psychosis" were used to extract articles on PubMed. Meta-analyses with a fixed and random-effects model with inverse variance method, DerSimonian-Laird estimator for $\tau^2$, and Cohen's d were calculated. Contrast-to-noise ratios (CNR) comparing the substantia nigra with the locus coeruleus were the primary study outcome.
+
+**Results**: The total sample of n = 6 eligible studies included ``r sum(data_qmri_cr$SZn)`` cases and ``r sum(data_qmri_cr$HCn)`` controls. Overall, we found a significant elevation of CNR in the substantia nigra (d=0.36923[0.14329; 0.59517], z=3.30555, p=0.00095) but not in the locus coeruleus in cases compared to controls d=-0.07192[-0.44642; 0.30258], z=-0.19205, p=0.8477), with CNR for the latter only reported in n = 3 studies.
+
+**Conclusion**: CNR in the substantia nigra, but not in the locus coeruleus, were significantly elevated in cases compared to controls in line with hypothesis. Results suggests towards NM-MR as a sufficiently specific candidate biomarker for dopaminergic dysfunction in schizophrenia. Further studies need to address specificity with more studies and potential effects of medication.
+
+### Background
+
+For decades the search for novel biomarkers has marked neurobiological research on schizophrenia. Although there is no comprehensive model of schizophrenic pathophysiology to date, excessive dopaminergic signaling in the midbrain has been found to be central in causing psychotic symptoms (@Heinz2010; @Howes2009). Researchers primarily have used molecular imaging, such as positron emission tomography (PET) or single photon emission computed tomography (SPECT) and reliably found dopaminergic aberrations in schizophrenic patients, associated with psychotic symptoms (@Brugger2020). However, obtaining these in vivo proxies of dopamine function is less feasible in patient populations, highly invasive, as well as expensive and time-consuming due to the need of radiopharmaceuticals. Technological advances, such as improved signal intensity, signal-to-noise ratio and contrast-to-noise ratio recently enabled neuromelanin-sensitive magnetic resonance imaging (NM-MRI).
+
+Neuromelanin is a byproduct of dopamine and catecholamine synthesis, primarily found in the dopaminergic neurons of the substantia nigra and the noradrenergic neurons of the locus ceruleus (@Graham1979). It appears primarily in the dopaminergic neurons of the substantia nigra (SN) and the noradrenergic neurons of the locus coeruleus (LC) following several reactions, which begin with the oxidation of cytosolic dopamine, advanced by ferric iron (FE+3). These oxidized DA-quinones react with cytosolic proteins and are polymerized, which results in an undegradable iron-melanin-protein complex. Possibly too large for proteasome degradation, macroautophagy is initiated and the complex is taken up into an autophagic vacuole. Fusion with lysosomes enables this vacuole to merge with other vacuoles and eventually leads to accumulation of neuromelanine organelles with increasing age of the organism. (@Cassidy2019; @Zucca2018). 
+
+The specific features of the interaction between neuromelanin and iron in the iron-neuromelanin complexes make them highly paramagnetic and give them their unique signature in magnetic resonance imaging (MRI). A combination of reduced magnetization transfer and shortened T1 relaxation times results in high signal intensities for NM-containing brain regions. (@Sulzer2018).
+Although too small for conventional MRI techniques, new sequences with a higher field-strength are sensitive enough to make tissue containing neuromelanin visible. Initially the sequences were developed as a biomarker for Parkinson's disease, which is marked by the depletion of dopaminergic neurons in the substantia nigra and noradrenergic neurons in the locus coeruleus. (@Sasaki2006). 
+After this initial breakthrough as a biomarker for neurodegenerative illness, a multitude of studies employed NM-MRI in patients with Parkinson's disease. Synthesized in a recent meta-analysis, NM-MRI shows high sensitivity, as well as specificity in differentiating healthy individuals from those with Parkinson's disease. (@Cho2020). However, its usefulness as a biomarker of neuropsychiatric dopaminergic illness, beyond neurodegenerative disorders, was unclear until recently. 
+
+In an extensive validation study, NM-MRI signal intensity was associated with regional NM concentration in post-mortem brain tissue. In contrast to previous studies, a semiautomated voxelwise approach to identify SN and reference regions was used to avoid high inter-rater variability in manual tracing approaches. In order to investigate the relation to dopaminergic alterations, NM-MRI signal was related to PET and fMRI data in both non-clinical as well as schizophrenic individuals. As expected, it was positively related to dopamine-release capacity in the associative/dorsal striatum and resting blood flow within the substantia nigra. According to these results, NM-MRI also functions as a marker of individual differences in presynaptic dopaminergic function/dopamine function in the nigrostriatal pathway.
+
+However, there remain some open questions regarding the specificity of the signal, the relation to the diagnostic category of schizophrenia or rather a psychotic phenotype and the impact of medication and age.
+NM-MRI signal intensity was related to positive symptom severity in prodromal in both clinical groups (@Cassidy2019). The absence of this association in previous studies (@Sasaki2010; @Yamashita2016) might be explained by differential effects of antipsychotic medications.  There is also conflicting evidence from the recent validation study, where NM-MRI CNR were not significantly different between individuals at the prodromal stage of schizophrenia, patients with schizophrenia and healthy controls. In contrast, the majority of studies investigating NM-MRI in relation to schizophreniform disorders found a significant elevation of CNR in patients compared to controls. 
+
+In order to elucidate the use of NM-MRI as a biomarker for schizophreniform disorders, a quantitative synthesis of studies investigating NM-MR in case-control studies is needed. To this purpose, all available case-control studies using NM-MRI in schizophreniform disorders are reviewed. It is hypothesized that CNR in the substantia nigra will be significantly elevated in patients compared to controls, whereas CNR in the locus coeruleus will not be significantly different between patients and controls. Furthermore, a meta-regression with year of publication and age as predictors will be calculated to control for further sources of variance.
+
+
 ```{r sumtable, include=T,echo=F}
 
 sumtable = subset(data_qmri, select = c('Autor','sample','sequence','region.of.interest','ROI.tracing.method','scanner.type'))
@@ -102,6 +131,8 @@ kable(
 
 
 ```
+
+
 
 ```{r NOStable, include=F,echo=F}
 
@@ -123,7 +154,9 @@ kable(
 
 #### Study Selection
 
-This review was completed according to PRISMA (Preferred Reporting Items for Systematic Reviews and Meta-Analyses) guidelines [@Moher2009]. Inclusion criteria and methods for analyses were prespecified and documented in a preregistered protocol {r} [https://osf.io/fykum] on January 6, 2021, publically available on the OSF (Open Science Framework). PubMed was searched from inception to January 6, 2021, according to the following search algorithm: ("neuromelanin" OR "qMRI" OR "hMRI") AND (MRI)) AND ("schizophrenia" OR "schizophrenic" OR "psychosis"). A total of 9 entries on PubMed and 2 additional studies, known to the authors were screened. Seven studies were found to be eligible and evaulated using the Newcastle– Ottawa Scale (NOS) for assessing the quality of non-randomized studies in meta-analysis [@Wells2014].
+This review was completed according to PRISMA (Preferred Reporting Items for Systematic Reviews and Meta-Analyses) guidelines [@Moher2009]. Inclusion criteria and methods for analyses were prespecified and documented in a preregistered protocol {r} [https://osf.io/fykum] on January 6, 2021, publically available on the OSF (Open Science Framework). PubMed was searched from inception to January 6, 2021, according to the following search algorithm: ("neuromelanin" OR "qMRI" OR "hMRI") AND (MRI)) AND ("schizophrenia" OR "schizophrenic" OR "psychosis"). A total of 9 entries on PubMed and 2 additional studies, known to the authors were screened. Studies were included according to the following criteria: (1) case-control studies including patients with a schizophreniform disorder, (2) NM-MRI sequences were used and (3) if they contained sufficient information on the contrast-to-noise ratio. Studies or subsets of studies were excluded in the following case: (1) other patient populations, (2) study designs only comparing patients without healthy controls, (3) articles focussing on the validation of NM-MRI sequences in non-patient samples. 6 studies were found to be eligible.
+
+
 
 ```{r fig2, echo = FALSE, out.width = "60%", fig.cap = "Flowchart: Study extraction"}
 
@@ -133,9 +166,14 @@ knitr::include_graphics("figures/Flowchart_qMRI.png")
 
 ```
 
+#### Quality assessment 
+
+The methodological quality of all eligible studies was evaluated using the Newcastle– Ottawa Scale (NOS) for assessing the quality of non-randomized studies in meta-analysis [@Wells2014]. 
+### Data synthesis
+
 #### Meta-analysis
 
-Novelty of the method and scarcety of eligible studies prevented an a priori estimate of heterogeneity. Therefore, a random-effects, as well as a fixed-effects model were calculated and compared. Hedge's g and DerSimonian-Laird estimator for &tau; were used for calculating pooled effect sizes while taking variance into account. Since there were only 7 studies available in totl, no subgroup analyses were conducted, according to the standard criterion [@Borenstein2013].
+Novelty of the method and scarcety of eligible studies prevented an a priori estimate of heterogeneity. Therefore, a random-effects, as well as a fixed-effects model were calculated and compared. Hedge's g and DerSimonian-Laird estimator for &tau; were used for calculating pooled effect sizes while taking variance into account. Since there were only 6 studies available in total, no subgroup analyses were conducted, according to the standard criterion [@Borenstein2013].
 
 #### Meta-regression
 
@@ -143,7 +181,7 @@ Meta-regression analyses for publication year and mean age across both groups wa
 
 #### Meta-analysis of variance
 
-To account for different level of heterogeneity between groups the variance ratios were calculated.  The coefficient of variation ratio (CVR) is the natural logarithm of the ratio between the coefficients of variation from two groups. It takes the interdependence of group mean and standard deviation into account [@Nakagawa2015].
+To account for different level of heterogeneity between groups the variance ratios were calculated. The coefficient of variation ratio (CVR) is the natural logarithm of the ratio between the coefficients of variation from two groups. It takes the interdependence of group mean and standard deviation into account [@Nakagawa2015].
 
 The statistical software R (version 3.6.3; R Foundation for Statistical Computing, Vienna, Austria) with the meta package (insert package citation) for meta-analysis of effect size and with the metafor package (insert package citation) for meta-analysis of variance was used to analyse all data.
 
@@ -173,36 +211,55 @@ data_qmri$SZsd[5] <- (q3 - q1) / (2 * (qnorm((0.75 * n - 0.125) / (n + 0.25))))
 ### Results excluding Yamashita (2016)
 
 ```{r resul_cr, fig.height = 6, fig.width = 12, include=T,echo=F}
-#exclude Yamashita - did the other authors all report CR values??
-
+#exclude Yamashita
 resul_cr<- metacont(SZn, SZmean, SZsd, HCn, HCmean, HCsd, data = data_qmri_cr, sm="SMD", method.smd = "Hedges", studlab = Autor)
 print(resul_cr)
 
+
+
+pdf("/cloud/project/plots/Fig2_Forest_SN.pdf", width=15, height=6) 
 forest_cr <- forest(resul_cr, lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
+dev.off() 
+
+
+# filter for studies without CNR-LC and do it again
+data_qmri_cr_LC <- data_qmri_cr %>% filter(year!="2019") %>% filter(year!="2020")
+  
+resul_cr_LC <- metacont(SZn, SZmean_LC, SZsd_LC, HCn, HCmean_LC, HCsd_LC, data = data_qmri_cr_LC, sm="SMD", method.smd = "Hedges", studlab = Autor)
+print(resul_cr_LC)
 
 ```
 
-The fixed effects model suggests significant differences between between patients and controls in mean estimates for neuromelanine content in the substantia nigra (SN) (d=``r resul$TE.random``[``r resul$lower.random``; ``r resul$upper.random``], z=``r resul$zval.fixed``, p=``r resul$pval.fixed``, see Figure x). Including only studies where contrast ratios of signal intensity from SN and white matter (locus ceruleus) were available, the effect remained significant (d=``r resul_cr$TE.random``[``r resul_cr$lower.random``; ``r resul_cr$upper.random``], z=``r resul_cr$zval.fixed``, p=``r resul_cr$pval.fixed``, see Figure x).
+The fixed effects model suggests significant differences between between patients and controls in mean estimates for neuromelanine content in the substantia nigra (SN) (d=``r resul_cr$TE.random``[``r resul_cr$lower.random``; ``r resul_cr$upper.random``], z=``r resul_cr$zval.fixed``, p=``r resul_cr$pval.fixed``, see Figure x) and no significant differences in mean estimates for neuromelanine in the locus coeruleus (d=``r resul_cr_LC$TE.random``[``r resul_cr_LC$lower.random``; ``r resul_cr_LC$upper.random``], z=``r resul_cr_LC$zval.fixed``, p=``r resul_cr_LC$pval.fixed``, see Figure x)
 
-The random effects model revealed no difference between patients and controls in mean estimates (d=``r resul$TE.random``[``r resul$lower.random``; ``r resul$upper.random``], z=``r resul$zval.random``, p=``r resul$pval.random``, see Figure x). However, the group effect was rendered significant when including only studies with contrast rations available (d=``r resul_cr$TE.random``[``r resul_cr$lower.random``; ``r resul_cr$upper.random``], z=``r resul_cr$zval.random``, p=``r resul_cr$pval.random``, see Figure x)
+The random effects model revealed a significant difference between patients and controls in mean estimates for the substantia nigra (d=``r resul_cr$TE.random``[``r resul_cr$lower.random``; ``r resul_cr$upper.random``], z=``r resul_cr$zval.random``, p=``r resul_cr$pval.random``, see Figure x) and no significant difference for neuromelanine in the locus coeruleus (d=``r resul_cr_LC$TE.random``[``r resul_cr_LC$lower.random``; ``r resul_cr_LC$upper.random``], z=``r resul_cr_LC$zval.random``, p=``r resul_cr_LC$pval.random``, see Figure x)
 
-The test for heterogeneity between studies shows a low amount of heterogeneity ($\tau^2$=``r resul$tau^2``, $I^2$=``r resul$I2*100``%) according to established standards [@Higgins2002].
+The test for heterogeneity between studies shows a low amount of heterogeneity for CNR in the substantia nigra ($\tau^2$=``r resul_cr$tau^2``, $I^2$=``r resul_cr$I2*100``%), as well as the locus coeruleus ($\tau^2$=``r resul_cr_LC$tau^2``, $I^2$=``r resul_cr_LC$I2*100``%)  according to established standards [@Higgins2002].
 
 ### Funnel Plot Asymmetry
 
 Visual inspection and formal testing for bias according to [@Egger1997] revealed no significant source of bias
 
 ```{r resul_metabias, include=T,echo=F}
-resul_metabias<-regtest(x=resul$TE, sei=resul$seTE, model="lm") # "sei" for the standard error
+resul_metabias<-regtest(x=resul_cr$TE, sei=resul_cr$seTE, model="lm") # "sei" for the standard error
 print(resul_metabias)
 
 # draw a funnel plot with missing studies filled in, in our case none
 resul_trimfill<-trimfill(resul_cr)
 funnel(resul_trimfill, legend=TRUE)
 
-#Studies are defined as outliers when their 95% confidence interval lies ouside the 95% confidence interval of the pooled effect.
-find.outliers(resul)
+#Studies are defined as outliers when their 95% confidence interval lies ouside the 95% confidence interval of the pooled effects
 find.outliers(resul_cr)
+
+resul_LC_metabias<-regtest(x=resul_cr_LC$TE, sei=resul_cr_LC$seTE, model="lm") # "sei" for the standard error
+print(resul_LC_metabias)
+
+# draw a funnel plot with missing studies filled in, in our case none
+resul_trimfill<-trimfill(resul_cr_LC)
+funnel(resul_trimfill, legend=TRUE)
+
+#Studies are defined as outliers when their 95% confidence interval lies ouside the 95% confidence interval of the pooled effects
+find.outliers(resul_cr_LC)
 
 ```
 
@@ -211,8 +268,16 @@ find.outliers(resul_cr)
 
 ```{r metareg, include=T, echo=F}
 
+# for year of publication and age (substantia nigra)
 resul_metareg_y<-metareg(resul_cr, year)
 resul_metareg_a<-metareg(resul_cr, age_mean)
+
+# for year of publication and age (locus coeruleus)
+resul_LC_metareg_y<-metareg(resul_cr_LC, year)
+resul_LC_metareg_a<-metareg(resul_cr_LC, age_mean)
+
+# for medication (chlorpromazine equivalent)
+resul_metareg_m<-metareg(resul_cr,Meds..CPZeq.)
 
 # here age difference in a metareg does not make sense since we have a matched sample and differences should be 0
 # only thing that would make sense as a metaregression: interaction of age (across all studies) with group and outcome ES
@@ -221,16 +286,16 @@ resul_metareg_a<-metareg(resul_cr, age_mean)
 # lm: CR = age*group -> interaction significant? OR t-test between correlation coefficients
 
 # reshape data into long format
-longdat.qmri <- melt(data_qmri_cr,
-                           # ID variables - all the variables to keep but not split apart on
-                           id.vars=c("Autor","age_mean"),
-                           # The source columns
-                           measure.vars=c("HCmean","SZmean"),
-                           # Name of the destination column that will identify the original
-                           # column that the measurement came from
-                           variable.name="group",
-                           value.name="CR"
-)
+# longdat.qmri <- melt(data_qmri_cr,
+#                            # ID variables - all the variables to keep but not split apart on
+#                            id.vars=c("Autor","age_mean"),
+#                            # The source columns
+#                            measure.vars=c("HCmean","SZmean"),
+#                            # Name of the destination column that will identify the original
+#                            # column that the measurement came from
+#                            variable.name="group",
+#                            value.name="CR"
+# )
 
 
 #mod <- lmer(CR~(1|Autor)*age_mean*group, data=longdat.qmri)
@@ -244,6 +309,7 @@ bubble.a <- bubble(metareg(resul_cr, age_mean),xlim = c(15,50),ylim=c(-0.2,0.7),
        lwd = 1,
        col.line = "blue", regline = TRUE, studlab = TRUE, pos.studlab = 1, offset = 1)
 bubble.a 
+
 
 ```
 
@@ -279,17 +345,15 @@ res.year <- rma.uni(cvar_ratio$yi, cvar_ratio$vi, mods = ~ cvar_ratio$year)
 res.year
 ```
 
-To control for possible further sources of variance, we conducted random-effects meta-regression. Publication year showed no significant moderating effect (QM=``r resul_metareg_y$QM``, p=``r resul_metareg_y$pval[2]``, see eFigure 7). Age of the investigated subjects did also show no significant moderating effect QM=``r resul_metareg_a$QM``, p=``r resul_metareg_a$pval[2]`` see eFigure 8).
+To control for possible further sources of variance, we conducted random-effects meta-regression. Publication year showed no significant moderating effect (QM=``r resul_metareg_y$QM``, p=``r resul_metareg_y$pval[2]``, see eFigure 7). Age of the investigated subjects did also show no significant moderating effect QM=``r resul_metareg_a$QM``, p=``r resul_metareg_a$pval[2]`` see eFigure 8). Antipsychotic medication of the investigated subjects did also show no significant moderating effect QM=``r resul_metareg_m$QM``, p=``r resul_metareg_m$pval[2]``.
 
 
 ### Post-hoc Power Analysis
 ```{r power-analysis, include=T, echo = F}
 
 # this gives us power slightly below 0.8 (only if excluding Yamashita)
-
 pa_cr <- power.analysis(d = resul_cr$TE.random, k = 6, n1 =mean(data_qmri_cr$HCn), n2 = mean(data_qmri_cr$SZn), heterogeneity = "moderate")
 pa_cr
-
 
 ```
 
