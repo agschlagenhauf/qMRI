@@ -179,10 +179,6 @@ Novelty of the method and scarcety of eligible studies prevented an a priori est
 
 Meta-regression analyses for publication year and mean age across both groups was calculated to estimate the effect of moderating variables on effect sizes between studies. Hedge's g and DerSimonian-Laird estimator for &tau; were used for calculating pooled effect sizes while taking variance into account.
 
-#### Meta-analysis of variance
-
-To account for different level of heterogeneity between groups the variance ratios were calculated. The coefficient of variation ratio (CVR) is the natural logarithm of the ratio between the coefficients of variation from two groups. It takes the interdependence of group mean and standard deviation into account [@Nakagawa2015].
-
 The statistical software R (version 3.6.3; R Foundation for Statistical Computing, Vienna, Austria) with the meta package (insert package citation) for meta-analysis of effect size and with the metafor package (insert package citation) for meta-analysis of variance was used to analyse all data.
 
 ```{r recomputeYamashita, include=F}
@@ -217,7 +213,7 @@ print(resul_cr)
 
 
 
-pdf("/cloud/project/plots/Fig2_Forest_SN.pdf", width=15, height=6) 
+pdf("/cloud/project/plots/Fig2_Forest_SN.pdf", width=12, height=5) 
 forest_cr <- forest(resul_cr, lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
 dev.off() 
 
@@ -244,7 +240,15 @@ Visual inspection and formal testing for bias according to [@Egger1997] revealed
 resul_metabias<-regtest(x=resul_cr$TE, sei=resul_cr$seTE, model="lm") # "sei" for the standard error
 print(resul_metabias)
 
-# draw a funnel plot with missing studies filled in, in our case none
+
+pdf("/cloud/project/plots/Suppl_Figure2_FunnelPlot.pdf", width=12, height=12) 
+
+# draw a funnel plot 
+funnel(resul_cr, legend=TRUE)
+
+dev.off() 
+
+# with missing studies filled in, in our case none
 resul_trimfill<-trimfill(resul_cr)
 funnel(resul_trimfill, legend=TRUE)
 
@@ -300,15 +304,27 @@ resul_metareg_m<-metareg(resul_cr,Meds..CPZeq.)
 
 #mod <- lmer(CR~(1|Autor)*age_mean*group, data=longdat.qmri)
 
+
+pdf("/cloud/project/plots/Suppl_Figure4_BubblePlot_Year.pdf", width=12, height=12) 
+
+# draw a funnel plot 
 bubble.y <- bubble(metareg(resul_cr, year),xlim = c(2005,2025), ylim=c(-0.9,1), bg = "transparent", ylab = "effect size", xlab="year of publication", cex.lab=1.5, lty = 1,
        lwd = 1,
        col.line = "blue", regline = TRUE, studlab = TRUE, pos.studlab = 1, offset = 1)
 bubble.y 
 
+dev.off() 
+
+pdf("/cloud/project/plots/Suppl_Figure5_BubblePlot_Age.pdf", width=12, height=12) 
+
+
 bubble.a <- bubble(metareg(resul_cr, age_mean),xlim = c(15,50),ylim=c(-0.2,0.7), bg = "transparent", ylab = "effect size", xlab="age", cex.lab=1.5, lty = 1,
        lwd = 1,
        col.line = "blue", regline = TRUE, studlab = TRUE, pos.studlab = 1, offset = 1)
 bubble.a 
+
+dev.off() 
+
 
 
 ```
