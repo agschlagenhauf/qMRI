@@ -84,33 +84,6 @@ data_qmri_cr <- data_qmri_cr %>% rowwise() %>% mutate(age_mean=mean(c(age_HC, ag
 
 ```
 
-### Abstract
-
-**Background**: Psychiatry is in urgent need for novel bio-markers. Novel neuromelanin-sensitive magnetic resonance imaging (NM-MRI) sequences provide a time-efficient and non-invasive way to investigate the human brain in-vivo. This allows researchers to gain insight into the metabolites of dopaminergic signaling and may provide further evidence for the hypothesized dopamine dysfunction in schizophrenia (SZ). The present review gives a narrative overview and quantitative synthesis of case-control studies using neuromelanine-sensitive sequences in SZ vs. healthy controls (HC).
-
-**Methods**: According to pregistration on January 5, 2021 (https://osf.io/fykum) the following search terms "neuromelanin" OR "qMRI" OR "hMRI" AND (MRI)) AND "schizophrenia" OR "schizophrenic" OR "psychosis" were used to extract articles on PubMed. Meta-analyses with a fixed and random-effects model with inverse variance method, DerSimonian-Laird estimator for $\tau^2$, and Cohen's d were calculated. Contrast-to-noise ratios (CNR) comparing the substantia nigra with the locus coeruleus were the primary study outcome.
-
-**Results**: The total sample of n = 6 eligible studies included ``r sum(data_qmri_cr$SZn)`` cases and ``r sum(data_qmri_cr$HCn)`` controls. Overall, we found a significant elevation of CNR in the substantia nigra (d=0.36923[0.14329; 0.59517], z=3.30555, p=0.00095) but not in the locus coeruleus in cases compared to controls d=-0.07192[-0.44642; 0.30258], z=-0.19205, p=0.8477), with CNR for the latter only reported in n = 3 studies.
-
-**Conclusion**: CNR in the substantia nigra, but not in the locus coeruleus, were significantly elevated in cases compared to controls in line with hypothesis. Results suggests towards NM-MR as a sufficiently specific candidate biomarker for dopaminergic dysfunction in schizophrenia. Further studies need to address specificity with more studies and potential effects of medication.
-
-### Background
-
-For decades the search for novel biomarkers has marked neurobiological research on schizophrenia. Although there is no comprehensive model of schizophrenic pathophysiology to date, excessive dopaminergic signaling in the midbrain has been found to be central in causing psychotic symptoms (@Heinz2010; @Howes2009). Researchers primarily have used molecular imaging, such as positron emission tomography (PET) or single photon emission computed tomography (SPECT) and reliably found dopaminergic aberrations in schizophrenic patients, associated with psychotic symptoms (@Brugger2020). However, obtaining these in vivo proxies of dopamine function is less feasible in patient populations, highly invasive, as well as expensive and time-consuming due to the need of radiopharmaceuticals. Technological advances, such as improved signal intensity, signal-to-noise ratio and contrast-to-noise ratio recently enabled neuromelanin-sensitive magnetic resonance imaging (NM-MRI).
-
-Neuromelanin is a byproduct of dopamine and catecholamine synthesis, primarily found in the dopaminergic neurons of the substantia nigra and the noradrenergic neurons of the locus ceruleus (@Graham1979). It appears primarily in the dopaminergic neurons of the substantia nigra (SN) and the noradrenergic neurons of the locus coeruleus (LC) following several reactions, which begin with the oxidation of cytosolic dopamine, advanced by ferric iron (FE+3). These oxidized DA-quinones react with cytosolic proteins and are polymerized, which results in an undegradable iron-melanin-protein complex. Possibly too large for proteasome degradation, macroautophagy is initiated and the complex is taken up into an autophagic vacuole. Fusion with lysosomes enables this vacuole to merge with other vacuoles and eventually leads to accumulation of neuromelanine organelles with increasing age of the organism. (@Cassidy2019; @Zucca2018). 
-
-The specific features of the interaction between neuromelanin and iron in the iron-neuromelanin complexes make them highly paramagnetic and give them their unique signature in magnetic resonance imaging (MRI). A combination of reduced magnetization transfer and shortened T1 relaxation times results in high signal intensities for NM-containing brain regions. (@Sulzer2018).
-Although too small for conventional MRI techniques, new sequences with a higher field-strength are sensitive enough to make tissue containing neuromelanin visible. Initially the sequences were developed as a biomarker for Parkinson's disease, which is marked by the depletion of dopaminergic neurons in the substantia nigra and noradrenergic neurons in the locus coeruleus. (@Sasaki2006). 
-After this initial breakthrough as a biomarker for neurodegenerative illness, a multitude of studies employed NM-MRI in patients with Parkinson's disease. Synthesized in a recent meta-analysis, NM-MRI shows high sensitivity, as well as specificity in differentiating healthy individuals from those with Parkinson's disease. (@Cho2020). However, its usefulness as a biomarker of neuropsychiatric dopaminergic illness, beyond neurodegenerative disorders, was unclear until recently. 
-
-In an extensive validation study, NM-MRI signal intensity was associated with regional NM concentration in post-mortem brain tissue. In contrast to previous studies, a semiautomated voxelwise approach to identify SN and reference regions was used to avoid high inter-rater variability in manual tracing approaches. In order to investigate the relation to dopaminergic alterations, NM-MRI signal was related to PET and fMRI data in both non-clinical as well as schizophrenic individuals. As expected, it was positively related to dopamine-release capacity in the associative/dorsal striatum and resting blood flow within the substantia nigra. According to these results, NM-MRI also functions as a marker of individual differences in presynaptic dopaminergic function/dopamine function in the nigrostriatal pathway.
-
-However, there remain some open questions regarding the specificity of the signal, the relation to the diagnostic category of schizophrenia or rather a psychotic phenotype and the impact of medication and age.
-NM-MRI signal intensity was related to positive symptom severity in prodromal in both clinical groups (@Cassidy2019). The absence of this association in previous studies (@Sasaki2010; @Yamashita2016) might be explained by differential effects of antipsychotic medications.  There is also conflicting evidence from the recent validation study, where NM-MRI CNR were not significantly different between individuals at the prodromal stage of schizophrenia, patients with schizophrenia and healthy controls. In contrast, the majority of studies investigating NM-MRI in relation to schizophreniform disorders found a significant elevation of CNR in patients compared to controls. 
-
-In order to elucidate the use of NM-MRI as a biomarker for schizophreniform disorders, a quantitative synthesis of studies investigating NM-MR in case-control studies is needed. To this purpose, all available case-control studies using NM-MRI in schizophreniform disorders are reviewed. It is hypothesized that CNR in the substantia nigra will be significantly elevated in patients compared to controls, whereas CNR in the locus coeruleus will not be significantly different between patients and controls. Furthermore, a meta-regression with year of publication and age as predictors will be calculated to control for further sources of variance.
-
 
 ```{r sumtable, include=T,echo=F}
 
@@ -134,22 +107,6 @@ kable(
 
 
 
-```{r NOStable, include=F,echo=F}
-
-# sumtable = subset(data_qmri, select = c('Autor','sample','sequence','region.of.interest','ROI.tracing.method','scanner.type'))
-# 
-# 
-# kable(df,
-#       "html",
-#       booktabs = T,
-#       align = c("r"),
-#       col.names = c("mpg","cyl","mpg","cyl")) %>%
-#   kable_styling("striped", full_width = F,
-#                 position = "left", font_size = 12) %>%
-#   add_header_above(c("Mazda RX4" = 2, "Datsun 710" = 2))
-
-```
-
 ### Methods
 
 #### Study Selection
@@ -161,7 +118,7 @@ This review was completed according to PRISMA (Preferred Reporting Items for Sys
 ```{r fig2, echo = FALSE, out.width = "60%", fig.cap = "Flowchart: Study extraction"}
 
 
-knitr::include_graphics("figures/Flowchart_qMRI.png")
+knitr::include_graphics("plots/prisma_flowchart.png")
 
 
 ```
@@ -212,7 +169,6 @@ resul_cr<- metacont(SZn, SZmean, SZsd, HCn, HCmean, HCsd, data = data_qmri_cr, s
 print(resul_cr)
 
 
-
 pdf("/cloud/project/plots/Fig2_Forest_SN.pdf", width=12, height=5) 
 forest_cr <- forest(resul_cr, lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
 dev.off() 
@@ -226,7 +182,7 @@ print(resul_cr_LC)
 
 ```
 
-The fixed effects model suggests significant differences between between patients and controls in mean estimates for neuromelanine content in the substantia nigra (SN) (d=``r resul_cr$TE.random``[``r resul_cr$lower.random``; ``r resul_cr$upper.random``], z=``r resul_cr$zval.fixed``, p=``r resul_cr$pval.fixed``, see Figure x) and no significant differences in mean estimates for neuromelanine in the locus coeruleus (d=``r resul_cr_LC$TE.random``[``r resul_cr_LC$lower.random``; ``r resul_cr_LC$upper.random``], z=``r resul_cr_LC$zval.fixed``, p=``r resul_cr_LC$pval.fixed``, see Figure x)
+The fixed effects model suggests significant differences between between patients and controls in mean estimates for neuromelanine content in the substantia nigra (SN) (d=``r resul_cr$TE.fixed``[``r resul_cr$lower.fixed``; ``r resul_cr$upper.fixed``], z=``r resul_cr$zval.fixed``, p=``r resul_cr$pval.fixed``, see Figure x) and no significant differences in mean estimates for neuromelanine in the locus coeruleus (d=``r resul_cr_LC$TE.fixed``[``r resul_cr_LC$lower.fixed``; ``r resul_cr_LC$upper.fixed``], z=``r resul_cr_LC$zval.fixed``, p=``r resul_cr_LC$pval.fixed``, see Figure x)
 
 The random effects model revealed a significant difference between patients and controls in mean estimates for the substantia nigra (d=``r resul_cr$TE.random``[``r resul_cr$lower.random``; ``r resul_cr$upper.random``], z=``r resul_cr$zval.random``, p=``r resul_cr$pval.random``, see Figure x) and no significant difference for neuromelanine in the locus coeruleus (d=``r resul_cr_LC$TE.random``[``r resul_cr_LC$lower.random``; ``r resul_cr_LC$upper.random``], z=``r resul_cr_LC$zval.random``, p=``r resul_cr_LC$pval.random``, see Figure x)
 
@@ -274,14 +230,19 @@ find.outliers(resul_cr_LC)
 
 # for year of publication and age (substantia nigra)
 resul_metareg_y<-metareg(resul_cr, year)
+resul_metareg_y
 resul_metareg_a<-metareg(resul_cr, age_mean)
+resul_metareg_a
 
 # for year of publication and age (locus coeruleus)
 resul_LC_metareg_y<-metareg(resul_cr_LC, year)
+resul_LC_metareg_y
 resul_LC_metareg_a<-metareg(resul_cr_LC, age_mean)
+resul_LC_metareg_a
 
 # for medication (chlorpromazine equivalent)
 resul_metareg_m<-metareg(resul_cr,Meds..CPZeq.)
+resul_metareg_m
 
 # here age difference in a metareg does not make sense since we have a matched sample and differences should be 0
 # only thing that would make sense as a metaregression: interaction of age (across all studies) with group and outcome ES
@@ -329,37 +290,6 @@ dev.off()
 
 ```
 
-### CVR
-```{r cvr, fig.height = 6, fig.width =12, include=T, echo = F}
-
-cvar_ratio<-data_qmri_cr%>%
-  escalc("CVR", n1i=SZn, m1i=SZmean, sd1i=SZsd, n2i=HCn, m2i=HCmean, sd2i=HCsd, data=., append = T)
-
-#resul_var_ratio<-rma.uni(cvar_ratio, measure = "VR", slab=data_qmri_cr$Autor)
-
-##double check: calculation of VR manually
-#log(data_qmri$SZsd/data_qmri$HCsd)+((1/((2*data_qmri$SZn)-1))-(1/((2*data_qmri$HCn)-1)))
-
-resul_cvar_ratio<-rma.uni(cvar_ratio, measure = "CVR", slab=data_qmri_cr$Autor)
-forest_plot<-forest.rma(resul_cvar_ratio, slab=data_qmri_cr$Autor, showweights=TRUE, top=2)
-text(forest_plot[["xlim"]][1],length(forest_plot[["rows"]])+2, "Study", pos=4)
-text(forest_plot[["xlim"]][2]-2.5,length(forest_plot[["rows"]])+2,"Weight", pos=4)
-text(forest_plot[["xlim"]][2],length(forest_plot[["rows"]])+2, "Log CVR [95% CI]", pos=2)
-text(-2.4,-1.7,"greater variability in controls")
-text(2.4,-1.7,"greater variability in patients")
-### add text with Q-value, dfs, p-value, and I^2 statistic
-text(forest_plot[["xlim"]][1]+1, 2, pos=1, cex=1, bquote(paste("(Q = ",.(formatC(resul_cvar_ratio$QE, digits=2, format="f")), ", df = ", .(resul_cvar_ratio$k - resul_cvar_ratio$p),", p = ", .(formatC(resul_cvar_ratio$QEp, digits=2, format="f")), "; ", I^2, " = ",.(formatC(resul_cvar_ratio$I2, digits=1, format="f")), "%)")))
-
-##test for effects of age and publication year on CVR
-
-# age is not significant
-res.age <- rma.uni(cvar_ratio$yi, cvar_ratio$vi, mods = ~ cvar_ratio$age_mean)
-res.age
-
-# year is significant
-res.year <- rma.uni(cvar_ratio$yi, cvar_ratio$vi, mods = ~ cvar_ratio$year)
-res.year
-```
 
 To control for possible further sources of variance, we conducted random-effects meta-regression. Publication year showed no significant moderating effect (QM=``r resul_metareg_y$QM``, p=``r resul_metareg_y$pval[2]``, see eFigure 7). Age of the investigated subjects did also show no significant moderating effect QM=``r resul_metareg_a$QM``, p=``r resul_metareg_a$pval[2]`` see eFigure 8). Antipsychotic medication of the investigated subjects did also show no significant moderating effect QM=``r resul_metareg_m$QM``, p=``r resul_metareg_m$pval[2]``.
 
