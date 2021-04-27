@@ -62,7 +62,7 @@ library(nlme)
 ```{r dataimport, include=F}
 #load data
 #data_qmri<-read_excel("Literatur_uebersicht.xlsx") # this did not recognize comma as decimal seps
-file <- "/cloud/project/data/Literatur_uebersicht.csv"
+file <- "data/Literatur_uebersicht.csv"
 data_qmri <- read.csv2(file, header = TRUE, sep = ",", quote = "\"", dec = ",", fill = TRUE,na.strings = "NA")
 
 # still displays decimals and turn relevant columns into numerics
@@ -215,11 +215,13 @@ data_qmri$SZsd[5] <- (q3 - q1) / (2 * (qnorm((0.75 * n - 0.125) / (n + 0.25))))
 resul_cr<- metacont(SZn, SZmean, SZsd, HCn, HCmean, HCsd, data = data_qmri_cr, sm="SMD", method.smd = "Hedges", studlab = Autor)
 print(resul_cr)
 
+res.cr<- rma(SZn, SZmean, SZsd, HCn, HCmean, HCsd, data = data_qmri_cr, sm="SMD", method.smd = "Hedges", studlab = Autor)
 
 
-pdf("/cloud/project/plots/Fig2_Forest_SN.pdf", width=15, height=6) 
-forest_cr <- forest(resul_cr, lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
-dev.off() 
+
+# pdf("/cloud/project/plots/Fig2_Forest_SN.pdf", width=15, height=6) 
+# forest_cr <- forest(resul_cr, lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
+# dev.off() 
 
 
 # filter for studies without CNR-LC and do it again
