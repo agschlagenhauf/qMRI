@@ -67,41 +67,38 @@ data_qmri <- read.csv2(file, header = TRUE, sep = ",", quote = "\"", dec = ",", 
 
 # still displays decimals and turn relevant columns into numerics
 options(digits=5)
-data_qmri[,7:11] <- sapply(data_qmri[,7:11],as.numeric)
-data_qmri[,20:31] <- sapply(data_qmri[,20:31],as.numeric)
+data_qmri[,14:33] <- sapply(data_qmri[,14:33],as.numeric)
+data_qmri[,4] <- sapply(data_qmri[,4],as.numeric)
+
 
 #data_qmri <- read_delim("data/Literatur_uebersicht.csv", ";", escape_double = FALSE, trim_ws = TRUE)
 
 authors <- c("Watanabe (2014)","Cassidy (2019)-SCZ","Cassidy (2019)-CHR", "Shibata (2008)","Sasaki (2010)","Jalles (2020)")
 
 
-# dataset without Yamashita
-data_qmri_cr <- data_qmri%>%filter(year!="2016")
-
 # calculate mean age of both groups for both datasets
-data_qmri <- data_qmri %>% rowwise() %>% mutate(age_mean=mean(c(age_HC, age_SZ)))
-data_qmri_cr <- data_qmri_cr %>% rowwise() %>% mutate(age_mean=mean(c(age_HC, age_SZ)))
+data_qmri_cr <- data_qmri %>% rowwise() %>% mutate(age_mean=mean(c(age_HC, age_SZ)))
 
 ```
 
 
 ```{r sumtable, include=T,echo=F}
 
-sumtable = subset(data_qmri, select = c('Autor','sample','sequence','region.of.interest','ROI.tracing.method','scanner.type'))
-
-
-options(knitr.kable.NA = "")
-# then print it in a table using the kable command
-
-kable(
-  sumtable,
-  caption = "**Summary of Characteristics of Synthesized NM-MRI Studies**",
-  col.names = c("Study","Sample","Sequence","ROI","ROI Tracing Method","Scanner Type")
-) %>%
-  kable_styling("striped") %>%
-  footnote("HC, Healthy Controls; CHR, Clinical High Risk; SCZ, Schizophrenia; NA, not available", general_title = "Demographic and neuropsychological data")
-#####
-
+# sumtable = subset(data_qmri, select = c('Autor','sample','sequence','region.of.interest','ROI.tracing.method','scanner.type'))
+# 
+# 
+# options(knitr.kable.NA = "")
+# # then print it in a table using the kable command
+# 
+# kable(
+#   sumtable,
+#   caption = "**Summary of Characteristics of Synthesized NM-MRI Studies**",
+#   col.names = c("Study label","MR-Sequence","Scanner Type","Reference region","Age of onset, Mean (SD)","ROI tracing")
+# ) %>%
+#   kable_styling("striped") %>%
+#   footnote("GRE=gradient response echo, FSE=fast spin echo, SPGR= spoiled gradient-recalled, SCP=superior cerebellar peduncle, ROI=region of interest, TE=time to echo, TR=time to repetition, SCZ=schizophenic patients, CHR=clinical high-risk individuals, HC=healthy controls, MDD=major depressive disorder", general_title = "Demographic and neuropsychological data")
+# #####
+# 
 
 ```
 
@@ -115,7 +112,7 @@ This review was completed according to PRISMA (Preferred Reporting Items for Sys
 
 
 
-```{r fig2, echo = FALSE, out.width = "60%", fig.cap = "Flowchart: Study extraction"}
+```{r fig2, echo = FALSE, out.width = "100%", fig.cap = "Flowchart: Study extraction"}
 
 
 knitr::include_graphics("plots/prisma_flowchart.png")
@@ -161,16 +158,15 @@ n <- data_qmri$SZn[5]
 data_qmri$SZsd[5] <- (q3 - q1) / (2 * (qnorm((0.75 * n - 0.125) / (n + 0.25))))
 ```
 
-### Results excluding Yamashita (2016)
+### Results 
 
 ```{r resul_cr, fig.height = 6, fig.width = 12, include=T,echo=F}
-#exclude Yamashita
 resul_cr<- metacont(SZn, SZmean, SZsd, HCn, HCmean, HCsd, data = data_qmri_cr, sm="SMD", method.smd = "Hedges", studlab = Autor)
 print(resul_cr)
 
 
 pdf("/cloud/project/plots/Fig2_Forest_SN.pdf", width=12, height=5) 
-forest_cr <- forest(resul_cr, lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
+forest(resul_cr, col.square = "lightblue", col.diamond = "darkblue", col.diamond.lines = "darkblue", lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
 dev.off() 
 
 
@@ -180,11 +176,16 @@ data_qmri_cr_LC <- data_qmri_cr %>% filter(year!="2019") %>% filter(year!="2020"
 resul_cr_LC <- metacont(SZn, SZmean_LC, SZsd_LC, HCn, HCmean_LC, HCsd_LC, data = data_qmri_cr_LC, sm="SMD", method.smd = "Hedges", studlab = Autor)
 print(resul_cr_LC)
 
+pdf("/cloud/project/plots/Suppl_Fig5_Forest_LC.pdf", width=12, height=5) 
+forest(resul_cr_LC, col.square = "lightblue", col.diamond = "darkblue", col.diamond.lines = "darkblue", lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
+
+dev.off() 
+
 ```
 
-The fixed effects model suggests significant differences between between patients and controls in mean estimates for neuromelanine content in the substantia nigra (SN) (d=``r resul_cr$TE.fixed``[``r resul_cr$lower.fixed``; ``r resul_cr$upper.fixed``], z=``r resul_cr$zval.fixed``, p=``r resul_cr$pval.fixed``, see Figure x) and no significant differences in mean estimates for neuromelanine in the locus coeruleus (d=``r resul_cr_LC$TE.fixed``[``r resul_cr_LC$lower.fixed``; ``r resul_cr_LC$upper.fixed``], z=``r resul_cr_LC$zval.fixed``, p=``r resul_cr_LC$pval.fixed``, see Figure x)
+The fixed effects model suggests significant differences between between patients and controls in mean estimates for neuromelanine content in the substantia nigra (SN) (d=``r resul_cr$TE.fixed``[``r resul_cr$lower.fixed``; ``r resul_cr$upper.fixed``], z=``r resul_cr$zval.fixed``, p=``r resul_cr$pval.fixed``, see Figure 2) and no significant differences in mean estimates for neuromelanine in the locus coeruleus (d=``r resul_cr_LC$TE.fixed``[``r resul_cr_LC$lower.fixed``; ``r resul_cr_LC$upper.fixed``], z=``r resul_cr_LC$zval.fixed``, p=``r resul_cr_LC$pval.fixed``, see eFigure 5)
 
-The random effects model revealed a significant difference between patients and controls in mean estimates for the substantia nigra (d=``r resul_cr$TE.random``[``r resul_cr$lower.random``; ``r resul_cr$upper.random``], z=``r resul_cr$zval.random``, p=``r resul_cr$pval.random``, see Figure x) and no significant difference for neuromelanine in the locus coeruleus (d=``r resul_cr_LC$TE.random``[``r resul_cr_LC$lower.random``; ``r resul_cr_LC$upper.random``], z=``r resul_cr_LC$zval.random``, p=``r resul_cr_LC$pval.random``, see Figure x)
+The random effects model revealed a significant difference between patients and controls in mean estimates for the substantia nigra (d=``r resul_cr$TE.random``[``r resul_cr$lower.random``; ``r resul_cr$upper.random``], z=``r resul_cr$zval.random``, p=``r resul_cr$pval.random``, see Figure 2) and no significant difference for neuromelanine in the locus coeruleus (d=``r resul_cr_LC$TE.random``[``r resul_cr_LC$lower.random``; ``r resul_cr_LC$upper.random``], z=``r resul_cr_LC$zval.random``, p=``r resul_cr_LC$pval.random``, see eFigure 5)
 
 The test for heterogeneity between studies shows a low amount of heterogeneity for CNR in the substantia nigra ($\tau^2$=``r resul_cr$tau^2``, $I^2$=``r resul_cr$I2*100``%), as well as the locus coeruleus ($\tau^2$=``r resul_cr_LC$tau^2``, $I^2$=``r resul_cr_LC$I2*100``%)  according to established standards [@Higgins2002].
 
@@ -227,22 +228,22 @@ find.outliers(resul_cr_LC)
 ### Meta-regression
 
 ```{r metareg, include=T, echo=F}
-
-# for year of publication and age (substantia nigra)
-resul_metareg_y<-metareg(resul_cr, year)
-resul_metareg_y
-resul_metareg_a<-metareg(resul_cr, age_mean)
-resul_metareg_a
-
-# for year of publication and age (locus coeruleus)
-resul_LC_metareg_y<-metareg(resul_cr_LC, year)
-resul_LC_metareg_y
-resul_LC_metareg_a<-metareg(resul_cr_LC, age_mean)
-resul_LC_metareg_a
-
-# for medication (chlorpromazine equivalent)
-resul_metareg_m<-metareg(resul_cr,Meds..CPZeq.)
-resul_metareg_m
+# 
+# # for year of publication and age (substantia nigra)
+# resul_metareg_y<-metareg(resul_cr, year)
+# resul_metareg_y
+# resul_metareg_a<-metareg(resul_cr, age_mean)
+# resul_metareg_a
+# 
+# # for year of publication and age (locus coeruleus)
+# resul_LC_metareg_y<-metareg(resul_cr_LC, year)
+# resul_LC_metareg_y
+# resul_LC_metareg_a<-metareg(resul_cr_LC, age_mean)
+# resul_LC_metareg_a
+# 
+# # for medication (chlorpromazine equivalent)
+# resul_metareg_m<-metareg(resul_cr,Meds..CPZeq.)
+# resul_metareg_m
 
 # here age difference in a metareg does not make sense since we have a matched sample and differences should be 0
 # only thing that would make sense as a metaregression: interaction of age (across all studies) with group and outcome ES
@@ -266,33 +267,90 @@ resul_metareg_m
 #mod <- lmer(CR~(1|Autor)*age_mean*group, data=longdat.qmri)
 
 
-pdf("/cloud/project/plots/Suppl_Figure4_BubblePlot_Year.pdf", width=12, height=12) 
+# pdf("/cloud/project/plots/Suppl_Figure4_BubblePlot_Year.pdf", width=12, height=12) 
+# 
+# # draw a funnel plot 
+# bubble.y <- bubble(metareg(resul_cr, year),xlim = c(2005,2025), ylim=c(-0.9,1), bg = "transparent", ylab = "effect size", xlab="year of publication", cex.lab=1.5, lty = 1,
+#        lwd = 1,
+#        col.line = "blue", regline = TRUE, studlab = TRUE, pos.studlab = 1, offset = 1)
+# bubble.y 
+# 
+# dev.off() 
+# 
+# pdf("/cloud/project/plots/Suppl_Figure5_BubblePlot_Age.pdf", width=12, height=12) 
+# 
+# 
+# bubble.a <- bubble(metareg(resul_cr, age_mean),xlim = c(15,50),ylim=c(-0.2,0.7), bg = "transparent", ylab = "effect size", xlab="age", cex.lab=1.5, lty = 1,
+#        lwd = 1,
+#        col.line = "blue", regline = TRUE, studlab = TRUE, pos.studlab = 1, offset = 1)
+# bubble.a 
+# 
+# dev.off() 
 
-# draw a funnel plot 
-bubble.y <- bubble(metareg(resul_cr, year),xlim = c(2005,2025), ylim=c(-0.9,1), bg = "transparent", ylab = "effect size", xlab="year of publication", cex.lab=1.5, lty = 1,
-       lwd = 1,
-       col.line = "blue", regline = TRUE, studlab = TRUE, pos.studlab = 1, offset = 1)
-bubble.y 
-
-dev.off() 
-
-pdf("/cloud/project/plots/Suppl_Figure5_BubblePlot_Age.pdf", width=12, height=12) 
-
-
-bubble.a <- bubble(metareg(resul_cr, age_mean),xlim = c(15,50),ylim=c(-0.2,0.7), bg = "transparent", ylab = "effect size", xlab="age", cex.lab=1.5, lty = 1,
-       lwd = 1,
-       col.line = "blue", regline = TRUE, studlab = TRUE, pos.studlab = 1, offset = 1)
-bubble.a 
-
-dev.off() 
+# To control for possible further sources of variance, we conducted random-effects meta-regression. Publication year showed no significant moderating effect (QM=``r resul_metareg_y$QM``, p=``r resul_metareg_y$pval[2]``, see eFigure 7). Age of the investigated subjects did also show no significant moderating effect QM=``r resul_metareg_a$QM``, p=``r resul_metareg_a$pval[2]`` see eFigure 8). Antipsychotic medication of the investigated subjects did also show no significant moderating effect QM=``r resul_metareg_m$QM``, p=``r resul_metareg_m$pval[2]``.
 
 
 
 ```
 
 
-To control for possible further sources of variance, we conducted random-effects meta-regression. Publication year showed no significant moderating effect (QM=``r resul_metareg_y$QM``, p=``r resul_metareg_y$pval[2]``, see eFigure 7). Age of the investigated subjects did also show no significant moderating effect QM=``r resul_metareg_a$QM``, p=``r resul_metareg_a$pval[2]`` see eFigure 8). Antipsychotic medication of the investigated subjects did also show no significant moderating effect QM=``r resul_metareg_m$QM``, p=``r resul_metareg_m$pval[2]``.
 
+
+# Meta-analysis of variance ratio
+
+```{r meta_vr_cvr, include=F}
+
+var_ratio<-data_qmri%>%
+  escalc("VR", n1i=SZn, m1i=SZmean, sd1i=SZsd, n2i=HCn, m2i=HCmean, sd2i=HCsd, data=., append = T)
+resul_var_ratio<-rma.uni(var_ratio, measure = "VR", slab=data_qmri$Autor)
+
+sum_var_ratio<-summary(var_ratio)
+resul_var_ratio<-rma.uni(var_ratio, measure = "VR", slab=data_qmri$Autor)
+
+cvar_ratio<-data_qmri%>%
+  escalc("CVR", n1i=SZn, m1i=SZmean, sd1i=SZsd, n2i=HCn, m2i=HCmean, sd2i=HCsd, data=., append = T)
+resul_cvar_ratio<-rma.uni(cvar_ratio, measure = "CVR")
+resul_cvar_ratio
+
+# double-check by computing manually
+log(data_qmri$SZsd/data_qmri$HCsd)+((1/((2*data_qmri$SZn)-1))-(1/((2*data_qmri$HCn)-1)))
+
+pdf("/cloud/project/plots/Suppl_Figure6_VR.pdf", width=10, height=6) 
+# 2. Create a plot
+forest_plot <- forest.rma(resul_var_ratio, slab=data_qmri$Autor, showweights=TRUE, top=2)
+text(forest_plot[["xlim"]][1]-0.2,length(forest_plot[["rows"]])+2, "Study", pos=4)
+text(forest_plot[["xlim"]][2]-1.4,length(forest_plot[["rows"]])+2,"Weight", pos=2)
+text(forest_plot[["xlim"]][2]+0.3,length(forest_plot[["rows"]])+2, "Log VR [95% CI]", pos=2)
+text(-1.9,-1.6,"greater variability in controls")
+text(1.9,-1.6,"greater variability in patients")
+### add text with Q-value, dfs, p-value, and I^2 statistic
+text(forest_plot[["xlim"]][1]+1, -1, pos=4, cex=0.9, bquote(paste("(Q = ",.(formatC(resul_var_ratio$QE, digits=2, format="f")), ", df = ", .(resul_var_ratio$k - resul_var_ratio$p),", p = ", .(formatC(resul_var_ratio$QEp, digits=2, format="f")), "; ", I^2, " = ",.(formatC(resul_var_ratio$I2, digits=1, format="f")), "%)")))
+
+# Close the pdf file
+dev.off()
+
+resul_var_ratio<-rma.uni(var_ratio, measure = "VR", slab=data_qmri$Autor)
+
+resul_cvar_ratio<-rma.uni(cvar_ratio, measure = "CVR", slab=data_qmri_cr$Autor)
+
+pdf("/cloud/project/plots/Suppl_Figure7_CVR.pdf", width=10, height=6) 
+
+forest_plot <- forest.rma(resul_cvar_ratio, slab=data_qmri_cr$Autor, showweights=TRUE, top=2)
+text(forest_plot[["xlim"]][1],length(forest_plot[["rows"]])+2, "Study", pos=4)
+text(forest_plot[["xlim"]][2]-2.5,length(forest_plot[["rows"]])+2,"Weight", pos=4)
+text(forest_plot[["xlim"]][2],length(forest_plot[["rows"]])+2, "Log CVR [95% CI]", pos=2)
+text(-2.4,-1.6,"greater variability in controls")
+text(2.4,-1.6,"greater variability in patients")
+### add text with Q-value, dfs, p-value, and I^2 statistic
+text(forest_plot[["xlim"]][1]+1, -1, pos=4, cex=0.9, bquote(paste("(Q = ",.(formatC(resul_cvar_ratio$QE, digits=2, format="f")), ", df = ", .(resul_cvar_ratio$k - resul_cvar_ratio$p),", p = ", .(formatC(resul_cvar_ratio$QEp, digits=2, format="f")), "; ", I^2, " = ",.(formatC(resul_cvar_ratio$I2, digits=1, format="f")), "%)")))
+
+
+dev.off() 
+
+
+```
+
+Taking possible effects of mean differences into account, we calculated coefficient of variation ratio. The adjusted measure shows no significant difference (logCVR=``r resul_cvar_ratio$beta[1]`` [``r resul_cvar_ratio$ci.lb``;``r resul_cvar_ratio$ci.ub``]; z=``r resul_cvar_ratio$zval``; p=``r resul_cvar_ratio$pval``, see Figure x) across all studies. The calculation of a random-effects model for differences in variability ratio also revealed no significant effect in patients as compared to controls (logVR=``r resul_var_ratio$beta[1]`` [``r resul_var_ratio$ci.lb``;``r resul_var_ratio$ci.ub``]; z=``r resul_var_ratio$zval``; p=``r resul_var_ratio$pval``, see eFigure x). 
 
 ### Post-hoc Power Analysis
 ```{r power-analysis, include=T, echo = F}
