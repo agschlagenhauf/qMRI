@@ -317,10 +317,10 @@ log(data_qmri$SZsd/data_qmri$HCsd)+((1/((2*data_qmri$SZn)-1))-(1/((2*data_qmri$H
 
 pdf("/cloud/project/plots/Suppl_Figure6_VR.pdf", width=10, height=6) 
 # 2. Create a plot
-forest_plot <- forest.rma(resul_var_ratio, slab=data_qmri$Autor, showweights=TRUE, top=2)
-text(forest_plot[["xlim"]][1]-0.2,length(forest_plot[["rows"]])+2, "Study", pos=4)
-text(forest_plot[["xlim"]][2]-1.4,length(forest_plot[["rows"]])+2,"Weight", pos=2)
-text(forest_plot[["xlim"]][2]+0.3,length(forest_plot[["rows"]])+2, "Log VR [95% CI]", pos=2)
+forest.rma(resul_var_ratio, slab=data_qmri$Autor, showweights=TRUE, top=2)
+text(forest_plot[["xlim"]][1],length(forest_plot[["rows"]])+2, "Study", pos=4)
+text(forest_plot[["xlim"]][2]-1.7,length(forest_plot[["rows"]])+2,"Weight", pos=2)
+text(forest_plot[["xlim"]][2]-0.1,length(forest_plot[["rows"]])+2, "Log VR [95% CI]", pos=2)
 text(-1.9,-1.6,"greater variability in controls")
 text(1.9,-1.6,"greater variability in patients")
 ### add text with Q-value, dfs, p-value, and I^2 statistic
