@@ -39,6 +39,8 @@ if (!require(papaja)) install.packages("papaja")
 if (!require(kableExtra)) install.packages("kableExtra")
 if (!require(reshape2)) install.packages("reshape2")
 if (!require(nlme)) install.packages("nlme")
+if (!require(bibtex)) install.packages("bibtex")
+
 
 
 
@@ -54,7 +56,9 @@ library(papaja)
 library(kableExtra)
 library(reshape2)
 library(nlme)
+library(bibtex)
 
+write.bib(c('meta','metafor'), file = "qMRIpackages.bib", append = FALSE, verbose = TRUE)
 
 ```
 
@@ -63,12 +67,12 @@ library(nlme)
 #load data
 #data_qmri<-read_excel("Literatur_uebersicht.xlsx") # this did not recognize comma as decimal seps
 file <- "/cloud/project/data/Literatur_uebersicht.csv"
-data_qmri <- read.csv2(file, header = TRUE, sep = ",", quote = "\"", dec = ",", fill = TRUE,na.strings = "NA")
+data_qmri <- read.csv2(file, header = TRUE, sep = ",", quote = "\"", dec = ",", fill = TRUE, na.strings = "NA")
 
 # still displays decimals and turn relevant columns into numerics
 options(digits=5)
-data_qmri[,14:33] <- sapply(data_qmri[,14:33],as.numeric)
-data_qmri[,4] <- sapply(data_qmri[,4],as.numeric)
+data_qmri[,10:27] <- sapply(data_qmri[,10:27],as.numeric)
+#data_qmri[,4] <- sapply(data_qmri[,4],as.numeric)
 
 
 #data_qmri <- read_delim("data/Literatur_uebersicht.csv", ";", escape_double = FALSE, trim_ws = TRUE)
@@ -137,6 +141,8 @@ The statistical software R (version 3.6.3; R Foundation for Statistical Computin
 
 ```{r recomputeYamashita, include=F}
 
+# this is not included in the final version because the article was not included
+
 # calculate sd from interquartil range
 # assuming that data is normally distributed mean = median
 # https://stats.stackexchange.com/questions/256456/how-to-calculate-mean-and-standard-deviation-from-median-and-quartiles
@@ -161,9 +167,18 @@ data_qmri$SZsd[5] <- (q3 - q1) / (2 * (qnorm((0.75 * n - 0.125) / (n + 0.25))))
 ### Results 
 
 ```{r resul_cr, fig.height = 6, fig.width = 12, include=T,echo=F}
+
+# meta-analysis for CNR in substantia nigra (SN)
 resul_cr<- metacont(SZn, SZmean, SZsd, HCn, HCmean, HCsd, data = data_qmri_cr, sm="SMD", method.smd = "Hedges", studlab = Autor)
 print(resul_cr)
 
+pdf("/cloud/project/plots/Fig2_Forest_SN.pdf", width=12, height=5) 
+forest(resul_cr, col.square = "lightblue", col.diamond = "darkblue", col.diamond.lines = "darkblue", lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
+dev.off() 
+
+# the following is just for graphic reasons: exactly the same as above content wise but different studlab for readability of bubble plots
+resul_cr_studlab <- metacont(SZn, SZmean, SZsd, HCn, HCmean, HCsd, data = data_qmri_cr, sm="SMD", method.smd = "Hedges", studlab = Studlab)
+print(resul_cr_studlab)
 
 pdf("/cloud/project/plots/Fig2_Forest_SN.pdf", width=12, height=5) 
 forest(resul_cr, col.square = "lightblue", col.diamond = "darkblue", col.diamond.lines = "darkblue", lab.e = "Patients with schizophrenia", lab.c = "Healthy controls")
@@ -173,6 +188,7 @@ dev.off()
 # filter for studies without CNR-LC and do it again
 data_qmri_cr_LC <- data_qmri_cr %>% filter(year!="2019") %>% filter(year!="2020")
   
+# meta-analysis for CNR in locus coeruleus (LC)
 resul_cr_LC <- metacont(SZn, SZmean_LC, SZsd_LC, HCn, HCmean_LC, HCsd_LC, data = data_qmri_cr_LC, sm="SMD", method.smd = "Hedges", studlab = Autor)
 print(resul_cr_LC)
 
@@ -194,9 +210,10 @@ The test for heterogeneity between studies shows a low amount of heterogeneity f
 Visual inspection and formal testing for bias according to [@Egger1997] revealed no significant source of bias
 
 ```{r resul_metabias, include=T,echo=F}
+
+# testing for bias
 resul_metabias<-regtest(x=resul_cr$TE, sei=resul_cr$seTE, model="lm") # "sei" for the standard error
 print(resul_metabias)
-
 
 pdf("/cloud/project/plots/Suppl_Figure2_FunnelPlot.pdf", width=12, height=12) 
 
@@ -216,8 +233,8 @@ resul_LC_metabias<-regtest(x=resul_cr_LC$TE, sei=resul_cr_LC$seTE, model="lm") #
 print(resul_LC_metabias)
 
 # draw a funnel plot with missing studies filled in, in our case none
-resul_trimfill<-trimfill(resul_cr_LC)
-funnel(resul_trimfill, legend=TRUE)
+# resul_trimfill<-trimfill(resul_cr_LC)
+# funnel(resul_trimfill, legend=TRUE)
 
 #Studies are defined as outliers when their 95% confidence interval lies ouside the 95% confidence interval of the pooled effects
 find.outliers(resul_cr_LC)
@@ -228,73 +245,54 @@ find.outliers(resul_cr_LC)
 ### Meta-regression
 
 ```{r metareg, include=T, echo=F}
-# 
-# # for year of publication and age (substantia nigra)
-# resul_metareg_y<-metareg(resul_cr, year)
-# resul_metareg_y
-# resul_metareg_a<-metareg(resul_cr, age_mean)
-# resul_metareg_a
-# 
-# # for year of publication and age (locus coeruleus)
-# resul_LC_metareg_y<-metareg(resul_cr_LC, year)
-# resul_LC_metareg_y
-# resul_LC_metareg_a<-metareg(resul_cr_LC, age_mean)
-# resul_LC_metareg_a
-# 
+#
+# for year of publication and age (substantia nigra)
+resul_metareg_y<-metareg(resul_cr_studlab, year)
+resul_metareg_y
+resul_metareg_a<-metareg(resul_cr_studlab, age_mean)
+resul_metareg_a
+
 # # for medication (chlorpromazine equivalent)
-# resul_metareg_m<-metareg(resul_cr,Meds..CPZeq.)
-# resul_metareg_m
-
-# here age difference in a metareg does not make sense since we have a matched sample and differences should be 0
-# only thing that would make sense as a metaregression: interaction of age (across all studies) with group and outcome ES
-
-# does strength of already found effect in each group between age and CR differ between groups? (this analysis also controls for correct matching)
-# lm: CR = age*group -> interaction significant? OR t-test between correlation coefficients
-
-# reshape data into long format
-# longdat.qmri <- melt(data_qmri_cr,
-#                            # ID variables - all the variables to keep but not split apart on
-#                            id.vars=c("Autor","age_mean"),
-#                            # The source columns
-#                            measure.vars=c("HCmean","SZmean"),
-#                            # Name of the destination column that will identify the original
-#                            # column that the measurement came from
-#                            variable.name="group",
-#                            value.name="CR"
-# )
+resul_metareg_m<-metareg(resul_cr_studlab,CPZeq_Mean)
+resul_metareg_m
 
 
-#mod <- lmer(CR~(1|Autor)*age_mean*group, data=longdat.qmri)
+pdf("/cloud/project/plots/Suppl_Figure4_BubblePlot_Year.pdf", width=12, height=12)
+
+# draw a funnel plot
+bubble.y <- bubble(metareg(resul_cr_studlab, year),xlim = c(2005,2025), ylim=c(-0.9,1), bg = "transparent", ylab = "effect size", xlab="year of publication", cex.lab=1.5, lty = 1,
+       lwd = 1,
+       col.line = "blue", regline = TRUE, studlab = TRUE, pos.studlab = 1, offset = 1)
+bubble.y
+
+dev.off()
+
+pdf("/cloud/project/plots/Suppl_Figure5_BubblePlot_Age.pdf", width=12, height=12)
 
 
-# pdf("/cloud/project/plots/Suppl_Figure4_BubblePlot_Year.pdf", width=12, height=12) 
-# 
-# # draw a funnel plot 
-# bubble.y <- bubble(metareg(resul_cr, year),xlim = c(2005,2025), ylim=c(-0.9,1), bg = "transparent", ylab = "effect size", xlab="year of publication", cex.lab=1.5, lty = 1,
-#        lwd = 1,
-#        col.line = "blue", regline = TRUE, studlab = TRUE, pos.studlab = 1, offset = 1)
-# bubble.y 
-# 
-# dev.off() 
-# 
-# pdf("/cloud/project/plots/Suppl_Figure5_BubblePlot_Age.pdf", width=12, height=12) 
-# 
-# 
-# bubble.a <- bubble(metareg(resul_cr, age_mean),xlim = c(15,50),ylim=c(-0.2,0.7), bg = "transparent", ylab = "effect size", xlab="age", cex.lab=1.5, lty = 1,
-#        lwd = 1,
-#        col.line = "blue", regline = TRUE, studlab = TRUE, pos.studlab = 1, offset = 1)
-# bubble.a 
-# 
-# dev.off() 
+bubble.a <- bubble(metareg(resul_cr, age_mean),xlim = c(15,50),ylim=c(-0.2,0.7), bg = "transparent", ylab = "effect size", xlab="age", cex.lab=1.5, lty = 1,
+       lwd = 1,
+       col.line = "blue", regline = TRUE, studlab = TRUE, pos.studlab = 1, offset = 1)
+bubble.a
 
-# To control for possible further sources of variance, we conducted random-effects meta-regression. Publication year showed no significant moderating effect (QM=``r resul_metareg_y$QM``, p=``r resul_metareg_y$pval[2]``, see eFigure 7). Age of the investigated subjects did also show no significant moderating effect QM=``r resul_metareg_a$QM``, p=``r resul_metareg_a$pval[2]`` see eFigure 8). Antipsychotic medication of the investigated subjects did also show no significant moderating effect QM=``r resul_metareg_m$QM``, p=``r resul_metareg_m$pval[2]``.
+dev.off()
+
+pdf("/cloud/project/plots/Suppl_Figure6_BubblePlot_Meds.pdf", width=12, height=12)
+
+
+bubble.m <- bubble(metareg(resul_cr, CPZeq_Mean),xlim = c(500,700),ylim=c(-0.2,0.7), bg = "transparent", ylab = "effect size", xlab="chlorpromazine equivalent", cex.lab=1.5, lty = 1,
+       lwd = 1,
+       col.line = "blue", regline = TRUE, studlab = TRUE, pos.studlab = 1, offset = 1)
+bubble.m
+
+dev.off()
+
 
 
 
 ```
 
-
-
+To control for possible further sources of variance, we conducted random-effects meta-regression. Publication year showed no significant moderating effect (QM=``r resul_metareg_y$QM``, p=``r resul_metareg_y$pval[2]``, see eFigure 7). Age of the investigated subjects did also show no significant moderating effect QM=``r resul_metareg_a$QM``, p=``r resul_metareg_a$pval[2]`` see eFigure 8). Antipsychotic medication of the investigated subjects did also show no significant moderating effect QM=``r resul_metareg_m$QM``, p=``r resul_metareg_m$pval[2]``.
 
 # Meta-analysis of variance ratio
 
@@ -302,9 +300,6 @@ find.outliers(resul_cr_LC)
 
 var_ratio<-data_qmri%>%
   escalc("VR", n1i=SZn, m1i=SZmean, sd1i=SZsd, n2i=HCn, m2i=HCmean, sd2i=HCsd, data=., append = T)
-resul_var_ratio<-rma.uni(var_ratio, measure = "VR", slab=data_qmri$Autor)
-
-sum_var_ratio<-summary(var_ratio)
 resul_var_ratio<-rma.uni(var_ratio, measure = "VR", slab=data_qmri$Autor)
 
 cvar_ratio<-data_qmri%>%
@@ -317,7 +312,7 @@ log(data_qmri$SZsd/data_qmri$HCsd)+((1/((2*data_qmri$SZn)-1))-(1/((2*data_qmri$H
 
 pdf("/cloud/project/plots/Suppl_Figure6_VR.pdf", width=10, height=6) 
 # 2. Create a plot
-forest.rma(resul_var_ratio, slab=data_qmri$Autor, showweights=TRUE, top=2)
+forest_plot <- forest.rma(resul_var_ratio, slab=data_qmri$Autor, showweights=TRUE, top=2)
 text(forest_plot[["xlim"]][1],length(forest_plot[["rows"]])+2, "Study", pos=4)
 text(forest_plot[["xlim"]][2]-1.7,length(forest_plot[["rows"]])+2,"Weight", pos=2)
 text(forest_plot[["xlim"]][2]-0.1,length(forest_plot[["rows"]])+2, "Log VR [95% CI]", pos=2)
@@ -355,7 +350,7 @@ Taking possible effects of mean differences into account, we calculated coeffici
 ### Post-hoc Power Analysis
 ```{r power-analysis, include=T, echo = F}
 
-# this gives us power slightly below 0.8 (only if excluding Yamashita)
+# this gives us power slightly below 0.8 (plot not included in publication)
 pa_cr <- power.analysis(d = resul_cr$TE.random, k = 6, n1 =mean(data_qmri_cr$HCn), n2 = mean(data_qmri_cr$SZn), heterogeneity = "moderate")
 pa_cr
 
