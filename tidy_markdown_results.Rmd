@@ -249,11 +249,11 @@ find.outliers(resul_cr_LC)
 # for year of publication and age (substantia nigra)
 resul_metareg_y<-metareg(resul_cr_studlab, year)
 resul_metareg_y
-resul_metareg_a<-metareg(resul_cr_studlab, age_mean)
+resul_metareg_a<-metareg(resul_cr, age_mean)
 resul_metareg_a
 
 # # for medication (chlorpromazine equivalent)
-resul_metareg_m<-metareg(resul_cr_studlab,CPZeq_Mean)
+resul_metareg_m<-metareg(resul_cr, CPZeq_Mean)
 resul_metareg_m
 
 
