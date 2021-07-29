@@ -1,6 +1,6 @@
 ---
 title: "Neuromelanin-sensitive MRI sequences in schizophrenia"
-author: "Lara Wieland, Sophie Fromm, Jakob Kaminski, Stefan Hetzer, & Florian Schlagenhauf"
+author: "Lara Wieland, Sophie Fromm, Stefan Hetzer, Florian Schlagenhauf & Jakob Kaminski,"
 date: "16 3 2021"
 output: html_document
 fig_crop: FALSE
@@ -330,7 +330,7 @@ resul_cvar_ratio<-rma.uni(cvar_ratio, measure = "CVR", slab=data_qmri_cr$Autor)
 
 pdf("/cloud/project/plots/Suppl_Figure7_CVR.pdf", width=10, height=6) 
 
-forest_plot <- forest.rma(resul_cvar_ratio, slab=data_qmri_cr$Autor, showweights=TRUE, top=2)
+forest.rma(resul_cvar_ratio, slab=data_qmri_cr$Autor, showweights=TRUE, top=2)
 text(forest_plot[["xlim"]][1],length(forest_plot[["rows"]])+2, "Study", pos=4)
 text(forest_plot[["xlim"]][2]-2.5,length(forest_plot[["rows"]])+2,"Weight", pos=4)
 text(forest_plot[["xlim"]][2],length(forest_plot[["rows"]])+2, "Log CVR [95% CI]", pos=2)
