@@ -9,7 +9,7 @@ Published: 28 October 2021
 
 DOI: https://doi.org/10.3389/fpsyt.2021.770282
 
-Further info on system and software version [wip]
+Data analysis was conducted in R (Version 4.0.3) on a Mac OS Catalina (10.15.7) [wip]
 
 
 
